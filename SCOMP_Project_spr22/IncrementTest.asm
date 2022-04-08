@@ -5,11 +5,26 @@ ORG 0
 	LOADI  0
     OUT    PXL_A
 	LOADI  10
-Loop:
-    
+
     OUT    PXL_D
-	ADDI   10
-    JUMP   Loop
+	ADDI   100000
+	OUT    PXL_D
+	ADDI   100
+	OUT    PXL_D
+	ADDI   100
+	OUT    PXL_D
+	ADDI   100
+	OUT    PXL_D
+	ADDI   100
+	OUT    PXL_D
+	ADDI   100
+	OUT    PXL_D
+	ADDI   100
+	OUT    PXL_D
+	ADDI   100
+	OUT    PXL_D
+	ADDI   100
+    
 
 ; IO address constants
 Switches:  EQU 000

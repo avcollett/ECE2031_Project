@@ -201,9 +201,14 @@ begin
 			ram_write_addr <= x"00";
 		elsif rising_edge(clk_10M) then
 			-- If SCOMP is writing to the address register...
-			if (io_write = '1') and (cs_addr='1') then
-				ram_write_addr <= data_in(7 downto 0);
-			end if;
+		if (io_write = '0') and (cs_data='1') then
+				ram_write_addr <= ram_write_addr + 1;
+				
+		elsif(wstate = storing) then
+				ram_write_addr <= ram_write_addr + 1;
+				
+		elsif (io_write = '1') and (cs_addr='1') then
+			ram_write_addr <= data_in(7 downto 0);
 		end if;
 	
 	

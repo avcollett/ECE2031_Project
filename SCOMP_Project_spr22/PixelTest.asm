@@ -1,7 +1,7 @@
 ; Simple test for the NeoPixel peripheral
 
 ORG 0
-    LOADI  3
+    LOADI  7
     OUT    PXL_A
 Loop:
     IN     Switches

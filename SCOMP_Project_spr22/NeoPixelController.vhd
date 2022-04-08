@@ -60,8 +60,8 @@ begin
 		init_file => "pixeldata.mif",
 		intended_device_family => "Cyclone V",
 		lpm_type => "altsyncram",
-		numwords_a => 4,
-		numwords_b => 4,
+		numwords_a => 256,
+		numwords_b => 256,
 		operation_mode => "BIDIR_DUAL_PORT",
 		outdata_aclr_a => "NONE",
 		outdata_aclr_b => "NONE",
@@ -102,7 +102,7 @@ begin
 		constant t0h : integer := 3; -- high time for '0'
 		constant ttot : integer := 12; -- total bit time
 		
-		constant npix : integer := 4;
+		constant npix : integer := 256;
 
 		-- which bit in the 24 bits is being sent
 		variable bit_count   : integer range 0 to 31;
@@ -111,7 +111,7 @@ begin
 		-- counter for the reset pulse
 		variable reset_count : integer range 0 to 1000;
 		-- Counter for the current pixel
-		variable pixel_count : integer range 0 to 3;
+		variable pixel_count : integer range 0 to 255;
 		
 		
 	begin
@@ -201,15 +201,18 @@ begin
 			ram_write_addr <= x"00";
 		elsif rising_edge(clk_10M) then
 				-- If SCOMP is writing to the address register...
-			if (io_write = '0') and (cs_data='1') then
-					ram_write_addr <= ram_write_addr + 1;
-					
-			elsif(wstate = storing) then
-					ram_write_addr <= ram_write_addr + 1;
-					
-			elsif (io_write = '1') and (cs_addr='1') then
+			if (io_write = '1') and (cs_addr='1') then
 				ram_write_addr <= data_in(7 downto 0);
+				
+		--	elsif (io_write = '0') and (cs_data='1') then
+		--			ram_write_addr <= ram_write_addr + 1;
+					
+		--	elsif(wstate = storing) then
+		--			ram_write_addr <= ram_write_addr + 1;
+					
+
 			end if;	
+
 		end if;
 	
 	

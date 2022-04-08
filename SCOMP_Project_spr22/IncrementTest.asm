@@ -8,7 +8,7 @@ ORG 0
 Loop:
     
     OUT    PXL_D
-	ADDI   1000
+	ADDI   10
     JUMP   Loop
 
 ; IO address constants

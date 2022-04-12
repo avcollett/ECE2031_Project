@@ -10,25 +10,13 @@ CONTENT
   BEGIN
     [000..7FF] : 0000;  -- Default to NOP
 
-           000 : B800;  -- 	LOADI  0
+           000 : B800;  --     LOADI  0
            001 : 98B0;  --     OUT    PXL_A
-           002 : B80A;  -- 	LOADI  10
+           002 : 0808;  -- 	LOAD adding
            003 : 98B1;  --     OUT    PXL_D
-           004 : 6EA0;  -- 	ADDI   100000
-           005 : 98B1;  -- 	OUT    PXL_D
-           006 : 6864;  -- 	ADDI   100
-           007 : 98B1;  -- 	OUT    PXL_D
-           008 : 6864;  -- 	ADDI   100
-           009 : 98B1;  -- 	OUT    PXL_D
-           00A : 6864;  -- 	ADDI   100
-           00B : 98B1;  -- 	OUT    PXL_D
-           00C : 6864;  -- 	ADDI   100
-           00D : 98B1;  -- 	OUT    PXL_D
-           00E : 6864;  -- 	ADDI   100
-           00F : 98B1;  -- 	OUT    PXL_D
-           010 : 6864;  -- 	ADDI   100
-           011 : 98B1;  -- 	OUT    PXL_D
-           012 : 6864;  -- 	ADDI   100
-           013 : 98B1;  -- 	OUT    PXL_D
-           014 : 6864;  -- 	ADDI   100
+           004 : 0808;  -- 	LOAD adding
+           005 : 6BE8;  -- 	ADDI 1000
+           006 : 1008;  -- 	STORE adding
+           007 : 2802;  --     JUMP   Loop
+           008 : 0000;  -- adding:		DW 0
   END;

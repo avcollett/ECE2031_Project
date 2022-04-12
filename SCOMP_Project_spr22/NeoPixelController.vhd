@@ -18,7 +18,8 @@ entity NeoPixelController is
 		io_write  : in   std_logic ;
 		cs_addr   : in   std_logic ;
 		cs_data   : in   std_logic ;
-		data_in   : in   std_logic_vector(15 downto 0);
+		bit_24	 : in   std_logic;
+		data_in   : in   std_logic_vector(23 downto 0);
 		sda       : out  std_logic
 	); 
 
@@ -149,6 +150,7 @@ begin
 						if pixel_count = npix-1 then -- is end of all pixels?
 							-- begin the reset period
 							reset_count := 1000;
+							
 						else
 							pixel_count := pixel_count + 1;
 						end if;
@@ -204,11 +206,11 @@ begin
 			if (io_write = '1') and (cs_addr='1') then
 				ram_write_addr <= data_in(7 downto 0);
 				
-		--	elsif (io_write = '0') and (cs_data='1') then
-		--			ram_write_addr <= ram_write_addr + 1;
+			elsif (io_write = '0') and (cs_data='1') then
+					ram_write_addr <= ram_write_addr + 1;
 					
-		--	elsif(wstate = storing) then
-		--			ram_write_addr <= ram_write_addr + 1;
+			elsif(wstate = storing) then
+					ram_write_addr <= ram_write_addr + 1;
 					
 
 			end if;	
@@ -246,6 +248,11 @@ begin
 					-- won't be stored until next clock cycle.
 					ram_we <= '1';
 					-- Change state
+					wstate <= storing;
+				end if;
+				if (io_write = '1') and (bit_24 = '1') then
+					ram_write_buffer <= data_in(23 downto 16) & data_in(15 downto 8)  & data_in(7 downto 0);
+					ram_we <= '1';
 					wstate <= storing;
 				end if;
 			when storing =>

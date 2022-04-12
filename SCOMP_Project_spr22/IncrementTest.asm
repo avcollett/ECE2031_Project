@@ -1,29 +1,15 @@
 ; Simple test for the NeoPixel peripheral
 
 ORG 0
-
-	LOADI  0
+    LOADI  0
     OUT    PXL_A
-	LOADI  10
-
+Loop:
+	LOAD adding
     OUT    PXL_D
-	ADDI   100000
-	OUT    PXL_D
-	ADDI   100
-	OUT    PXL_D
-	ADDI   100
-	OUT    PXL_D
-	ADDI   100
-	OUT    PXL_D
-	ADDI   100
-	OUT    PXL_D
-	ADDI   100
-	OUT    PXL_D
-	ADDI   100
-	OUT    PXL_D
-	ADDI   100
-	OUT    PXL_D
-	ADDI   100
+	LOAD adding
+	ADDI 1000
+	STORE adding
+    JUMP   Loop
     
 
 ; IO address constants
@@ -32,5 +18,6 @@ LEDs:      EQU 001
 Timer:     EQU 002
 Hex0:      EQU 004
 Hex1:      EQU 005
+adding:		DW 0
 PXL_A:     EQU &H0B0
 PXL_D:     EQU &H0B1

@@ -18,7 +18,9 @@ entity NeoPixelController is
 		io_write  : in   std_logic ;
 		cs_addr   : in   std_logic ;
 		cs_data   : in   std_logic ;
+		cs_all    : in   std_logic ;
 		data_in   : in   std_logic_vector(15 downto 0);
+		
 		sda       : out  std_logic
 	); 
 
@@ -38,9 +40,11 @@ architecture internals of NeoPixelController is
 
 	-- Signal SCOMP will write to before it gets stored into memory
 	signal ram_write_buffer : std_logic_vector(23 downto 0);
+	
+	signal data_set_all		: std_logic_vector(23 downto 0);
 
 	-- RAM interface state machine signals
-	type write_states is (idle, storing);
+	type write_states is (idle, setAll ,storing);
 	signal wstate: write_states;
 
 	
@@ -194,27 +198,7 @@ begin
 	
 	process(clk_10M, resetn, cs_addr)
 	begin
-		-- For this implementation, saving the memory address
-		-- doesn't require anything special.  Just latch it when
-		-- SCOMP sends it.
-		if resetn = '0' then
-			ram_write_addr <= x"00";
-		elsif rising_edge(clk_10M) then
-				-- If SCOMP is writing to the address register...
-			if (io_write = '1') and (cs_addr='1') then
-				ram_write_addr <= data_in(7 downto 0);
-				
-		--	elsif (io_write = '0') and (cs_data='1') then
-		--			ram_write_addr <= ram_write_addr + 1;
-					
-		--	elsif(wstate = storing) then
-		--			ram_write_addr <= ram_write_addr + 1;
-					
 
-			end if;	
-
-		end if;
-	
 	
 		-- The sequnce of events needed to store data into memory will be
 		-- implemented with a state machine.
@@ -231,6 +215,7 @@ begin
 			wstate <= idle;
 			ram_we <= '0';
 			ram_write_buffer <= x"000000";
+			ram_write_addr <= x"00";
 			-- Note that resetting this device does NOT clear the memory.
 			-- Clearing memory would require cycling through each address
 			-- and setting them all to 0.
@@ -247,11 +232,54 @@ begin
 					ram_we <= '1';
 					-- Change state
 					wstate <= storing;
+				
+				elsif (io_write = '1') and (cs_all='1') then
+					data_set_all    <= data_in(10 downto 5) & "00" & data_in(15 downto 11) & "000" & data_in(4 downto 0) & "000";
+					ram_write_addr <= ram_write_addr - ram_write_addr;
+					ram_write_buffer <= data_set_all;
+					ram_we <= '1';
+					wstate <= setAll;
+
+				
+				elsif (io_write = '1') and (cs_addr='1') then
+					ram_write_addr <= data_in(7 downto 0);
+				
 				end if;
+						
+						
+						
+			
+				
+			
+			when setAll  =>
+				if(ram_write_addr = 256) then 
+					ram_we <= '0';
+					wstate <= idle;
+					ram_write_addr <= ram_write_addr - ram_write_addr;
+					
+				elsif (io_write = '1') and (cs_data='1') then
+					wstate <= storing;
+					ram_write_buffer  <= data_in(10 downto 5) & "00" & data_in(15 downto 11) & "000" & data_in(4 downto 0) & "000";
+					
+				elsif (io_write = '1') and (cs_addr='1') then
+					wstate <= idle;
+					ram_we <= '0';
+					ram_write_addr <= data_in(7 downto 0);
+
+				else
+					ram_write_addr <= ram_write_addr + 1;
+					ram_write_buffer <= data_set_all;
+					
+				end if;
+				
+				
+				
 			when storing =>
 				-- All that's needed here is to lower ram_we.  The RAM will be
 				-- storing data on this clock edge, so ram_we can go low at the
 				-- same time.
+				
+				ram_write_addr <= ram_write_addr + 1;
 				ram_we <= '0';
 				wstate <= idle;
 			when others =>

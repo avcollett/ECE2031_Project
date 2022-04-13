@@ -18,7 +18,8 @@ entity NeoPixelController is
 		io_write  : in   std_logic ;
 		cs_addr   : in   std_logic ;
 		cs_data   : in   std_logic ;
-		bit_24	 : in   std_logic;
+		bit_24_RB : in   std_logic;
+		bit_24_G	 : in   std_logic;
 		cs_all	 : in   std_logic;
 		pxl_tog	 : in	  std_logic;
 		data_in   : in   std_logic_vector(15 downto 0);
@@ -42,6 +43,7 @@ architecture internals of NeoPixelController is
 	signal pixel_buffer : std_logic_vector(23 downto 0);
 	
 	signal data_set_all : std_logic_vector(23 downto 0);
+	signal TempColorHolder : std_logic_vector(23 downto 0);
 
 	-- Signal SCOMP will write to before it gets stored into memory
 	signal ram_write_buffer : std_logic_vector(23 downto 0);
@@ -221,6 +223,7 @@ process(clk_10M, resetn, cs_addr)
 			ram_write_buffer <= x"000000";
 			ram_write_addr <= x"00";
 			IncrementDirection <= '0';
+			TempColorHolder <= "000000000000000000000000";
 			-- Note that resetting this device does NOT clear the memory.
 			-- Clearing memory would require cycling through each address
 			-- and setting them all to 0.
@@ -237,10 +240,18 @@ process(clk_10M, resetn, cs_addr)
 					ram_we <= '1';
 					-- Change state
 					wstate <= storing;
-				elsif (io_write = '1') and (bit_24 = '1') then
-					--ram_write_buffer <= data_in(23 downto 16) & data_in(15 downto 8)  & data_in(7 downto 0);
+					
+				elsif (io_write = '1') and (bit_24_RB = '1') then
+					TempColorHolder <= ((TempColorHolder and "111111110000000000000000") or ("00000000" & data_in(15 downto 0)));
+					ram_write_buffer <= TempColorHolder;
 					ram_we <= '1';
 					wstate <= storing;
+					
+				elsif (io_write = '1') and (bit_24_G = '1') then
+					TempColorHolder <= ((TempColorHolder and "000000001111111111111111") or (data_in(7 downto 0) & "0000000000000000"));
+				
+				
+					
 					
 					
 				elsif (io_write = '1') and (cs_all='1') then
@@ -263,7 +274,7 @@ process(clk_10M, resetn, cs_addr)
 						IncrementDirection <= '0';
 					end if;
 					
-					
+				
 				end if;
 						
 						
@@ -286,6 +297,21 @@ process(clk_10M, resetn, cs_addr)
 					wstate <= idle;
 					ram_we <= '0';
 					ram_write_addr <= data_in(7 downto 0);
+					
+					
+				elsif (io_write = '1') and (bit_24_RB = '1') then
+					wstate <= storing;
+					ram_write_addr <= ram_write_addr - ram_write_addr;
+					
+					TempColorHolder <= ((TempColorHolder and "111111110000000000000000") or ("00000000" & data_in(15 downto 0)));
+					ram_write_buffer <= TempColorHolder;
+					
+					
+				elsif (io_write = '1') and (bit_24_G = '1') then
+					TempColorHolder <= ((TempColorHolder and "000000001111111111111111") or (data_in(7 downto 0) & "0000000000000000"));
+					ram_we <= '0';
+					ram_write_addr <= ram_write_addr - ram_write_addr;
+					wstate <= idle;
 					
 					
 				elsif (io_write = '1') and (pxl_tog='1') then

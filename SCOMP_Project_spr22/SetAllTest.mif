@@ -11,8 +11,16 @@ CONTENT
     [000..7FF] : 0000;  -- Default to NOP
 
            000 : B80A;  -- 	LOADI  10
-           001 : 98B3;  --     OUT    PXL_ALL
-           002 : BBE8;  -- 	LOADI  1000
-           003 : 98B1;  -- 	OUT    PXL_D
-           004 : 98B1;  -- 	OUT    PXL_D
+           001 : 98B2;  --     OUT    PXL_ALL
+           002 : B80A;  -- 	LOADI  10
+           003 : B80A;  -- 	LOADI  10
+           004 : B80A;  -- 	LOADI  10
+           005 : B86F;  -- 	LOADI  &H006F
+           006 : 98B5;  -- 	OUT    PXL_24_G
+           007 : BF00;  -- 	LOADI  &HFF00
+           008 : 98B4;  -- 	OUT    PXL_24_RB
+           009 : B86F;  -- 	LOADI  &H006F
+           00A : 98B5;  -- 	OUT    PXL_24_G
+           00B : BF00;  -- 	LOADI  &HFF00
+           00C : 98B4;  -- 	OUT    PXL_24_RB
   END;

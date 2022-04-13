@@ -226,6 +226,7 @@ SCOMP_Project_spr22/db/SCOMP.(29).cnf.hdb
 SCOMP_Project_spr22/db/SCOMP.(29).cnf.cdb
 SCOMP_Project_spr22/db/altsyncram_bo24.tdf
 SCOMP_Project_spr22/db/altsyncram_2c24.tdf
+<<<<<<< Updated upstream
 SCOMP_Project_spr22/db/SCOMP.(100).cnf.cdb
 SCOMP_Project_spr22/db/SCOMP.(100).cnf.hdb
 SCOMP_Project_spr22/db/SCOMP.(101).cnf.cdb
@@ -321,3 +322,9 @@ SCOMP_Project_spr22/db/SCOMP.(98).cnf.hdb
 SCOMP_Project_spr22/db/SCOMP.(99).cnf.cdb
 SCOMP_Project_spr22/db/SCOMP.(99).cnf.hdb
 SCOMP_Project_spr22/db/SCOMP.quiproj.29868.rdr.flock
+=======
+*.flock
+*.cdb
+*.hdb
+>>>>>>> Stashed changes
+SCOMP_Project_spr22/db/altsyncram_tp24.tdf

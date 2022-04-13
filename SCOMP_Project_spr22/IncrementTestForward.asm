@@ -1,8 +1,8 @@
 ; Simple test for the NeoPixel peripheral
 
 ORG 0
-	OUT	   INC_REV
-    LOADI  7
+	
+    LOADI  0
     OUT    PXL_A
 	
 	LOADI  10

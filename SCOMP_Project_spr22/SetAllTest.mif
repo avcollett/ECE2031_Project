@@ -1,0 +1,18 @@
+-- Altera Memory Initialization File (MIF)
+
+DEPTH = 2048;
+WIDTH = 16;
+
+ADDRESS_RADIX = HEX;
+DATA_RADIX = HEX;
+
+CONTENT
+  BEGIN
+    [000..7FF] : 0000;  -- Default to NOP
+
+           000 : B80A;  -- 	LOADI  10
+           001 : 98B3;  --     OUT    PXL_ALL
+           002 : BBE8;  -- 	LOADI  1000
+           003 : 98B1;  -- 	OUT    PXL_D
+           004 : 98B1;  -- 	OUT    PXL_D
+  END;

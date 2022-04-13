@@ -19,7 +19,9 @@ entity NeoPixelController is
 		cs_addr   : in   std_logic ;
 		cs_data   : in   std_logic ;
 		bit_24	 : in   std_logic;
-		data_in   : in   std_logic_vector(23 downto 0);
+		cs_all	 : in   std_logic;
+		pxl_tog	 : in	  std_logic;
+		data_in   : in   std_logic_vector(15 downto 0);
 		sda       : out  std_logic
 	); 
 
@@ -31,17 +33,21 @@ architecture internals of NeoPixelController is
 	signal ram_read_addr, ram_write_addr : std_logic_vector(7 downto 0);
 	-- RAM write enable
 	signal ram_we : std_logic;
+	
+	signal IncrementDirection : std_logic;
 
 	-- Signals for data coming out of memory
 	signal ram_read_data : std_logic_vector(23 downto 0);
 	-- Signal to store the current output pixel's color data
 	signal pixel_buffer : std_logic_vector(23 downto 0);
+	
+	signal data_set_all : std_logic_vector(23 downto 0);
 
 	-- Signal SCOMP will write to before it gets stored into memory
 	signal ram_write_buffer : std_logic_vector(23 downto 0);
 
 	-- RAM interface state machine signals
-	type write_states is (idle, storing);
+	type write_states is (idle, setAll, storing);
 	signal wstate: write_states;
 
 	
@@ -194,29 +200,9 @@ begin
 	
 	
 	
-	process(clk_10M, resetn, cs_addr)
+process(clk_10M, resetn, cs_addr)
 	begin
-		-- For this implementation, saving the memory address
-		-- doesn't require anything special.  Just latch it when
-		-- SCOMP sends it.
-		if resetn = '0' then
-			ram_write_addr <= x"00";
-		elsif rising_edge(clk_10M) then
-				-- If SCOMP is writing to the address register...
-			if (io_write = '1') and (cs_addr='1') then
-				ram_write_addr <= data_in(7 downto 0);
-				
-			elsif (io_write = '0') and (cs_data='1') then
-					ram_write_addr <= ram_write_addr + 1;
-					
-			elsif(wstate = storing) then
-					ram_write_addr <= ram_write_addr + 1;
-					
 
-			end if;	
-
-		end if;
-	
 	
 		-- The sequnce of events needed to store data into memory will be
 		-- implemented with a state machine.
@@ -233,6 +219,8 @@ begin
 			wstate <= idle;
 			ram_we <= '0';
 			ram_write_buffer <= x"000000";
+			ram_write_addr <= x"00";
+			IncrementDirection <= '0';
 			-- Note that resetting this device does NOT clear the memory.
 			-- Clearing memory would require cycling through each address
 			-- and setting them all to 0.
@@ -249,16 +237,85 @@ begin
 					ram_we <= '1';
 					-- Change state
 					wstate <= storing;
-				end if;
-				if (io_write = '1') and (bit_24 = '1') then
-					ram_write_buffer <= data_in(23 downto 16) & data_in(15 downto 8)  & data_in(7 downto 0);
+				elsif (io_write = '1') and (bit_24 = '1') then
+					--ram_write_buffer <= data_in(23 downto 16) & data_in(15 downto 8)  & data_in(7 downto 0);
 					ram_we <= '1';
 					wstate <= storing;
+					
+					
+				elsif (io_write = '1') and (cs_all='1') then
+					data_set_all    <= data_in(10 downto 5) & "00" & data_in(15 downto 11) & "000" & data_in(4 downto 0) & "000";
+					ram_write_addr <= ram_write_addr - ram_write_addr;
+					ram_write_buffer <= data_set_all;
+					ram_we <= '1';
+					wstate <= setAll;
+
+				
+				elsif (io_write = '1') and (cs_addr='1') then
+					ram_write_addr <= data_in(7 downto 0);
+					
+				
+				elsif (io_write = '1') and (pxl_tog='1') then
+				
+					if(IncrementDirection = '0') then
+						IncrementDirection <= '1';
+					else
+						IncrementDirection <= '0';
+					end if;
+					
+					
 				end if;
+						
+						
+						
+			
+				
+			
+			when setAll  =>
+				if(ram_write_addr = 256) then 
+					ram_we <= '0';
+					wstate <= idle;
+					ram_write_addr <= ram_write_addr - ram_write_addr;
+					
+				elsif (io_write = '1') and (cs_data='1') then
+					wstate <= storing;
+					ram_write_addr <= ram_write_addr - ram_write_addr;
+					ram_write_buffer  <= data_in(10 downto 5) & "00" & data_in(15 downto 11) & "000" & data_in(4 downto 0) & "000";
+					
+				elsif (io_write = '1') and (cs_addr='1') then
+					wstate <= idle;
+					ram_we <= '0';
+					ram_write_addr <= data_in(7 downto 0);
+					
+					
+				elsif (io_write = '1') and (pxl_tog='1') then
+				
+					if(IncrementDirection = '0') then
+						IncrementDirection <= '1';
+					else
+						IncrementDirection <= '0';
+					end if;
+					
+					
+				else
+					ram_write_addr <= ram_write_addr + 1;
+					ram_write_buffer <= data_set_all;
+					
+				end if;
+				
+				
+				
 			when storing =>
 				-- All that's needed here is to lower ram_we.  The RAM will be
 				-- storing data on this clock edge, so ram_we can go low at the
 				-- same time.
+				if IncrementDirection = '0' then
+					ram_write_addr <= ram_write_addr + 1;
+				elsif IncrementDirection = '1' then
+					ram_write_addr <= ram_write_addr - 1;
+				end if;
+				
+				
 				ram_we <= '0';
 				wstate <= idle;
 			when others =>
@@ -270,3 +327,4 @@ begin
 	
 	
 end internals;
+

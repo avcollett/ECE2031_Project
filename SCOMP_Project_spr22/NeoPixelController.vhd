@@ -22,7 +22,7 @@ entity NeoPixelController is
 		cs_all	 : in   std_logic;
 		pxl_tog	 : in	  std_logic;
 		data_in   : in   std_logic_vector(15 downto 0);
-		data_word : inout std_logic_vector(15 downto 0);
+		data_word : out std_logic_vector(15 downto 0);
 		sda       : out  std_logic
 	); 
 
@@ -48,7 +48,7 @@ architecture internals of NeoPixelController is
 	signal ram_write_buffer : std_logic_vector(23 downto 0);
 
 	-- RAM interface state machine signals
-	type write_states is (idle, setAll, storing);
+	type write_states is (idle, setAll, storing, reading);
 	signal wstate: write_states;
 
 	
@@ -148,7 +148,7 @@ begin
 				reset_count := reset_count - 1;
 				-- load data from memory
 				pixel_buffer <= ram_read_data;
-				data_word <= "ZZZZZZZZZZZZZZZZ";
+			
 				
 			else -- not in reset period (i.e. currently sending data)
 				-- handle reaching end of a bit
@@ -159,7 +159,7 @@ begin
 					if bit_count = 0 then -- is end of this pixels's data?
 						bit_count := 23; -- start a new pixel
 						pixel_buffer <= ram_read_data;
-						data_word <= ram_read_data(15 downto 0);
+						
 						if pixel_count = npix-1 then -- is end of all pixels?
 							-- begin the reset period
 							reset_count := 1000;
@@ -228,6 +228,8 @@ process(clk_10M, resetn, cs_addr)
 			ram_write_buffer <= x"000000";
 			ram_write_addr <= x"00";
 			IncrementDirection <= '0';
+			data_word <= "ZZZZZZZZZZZZZZZZ";
+			
 			-- Note that resetting this device does NOT clear the memory.
 			-- Clearing memory would require cycling through each address
 			-- and setting them all to 0.
@@ -250,7 +252,11 @@ process(clk_10M, resetn, cs_addr)
 					wstate <= storing;
 					
 
-					
+				elsif (io_write = '0') and (cs_data = '1') then
+					ram_we<= '0';
+			
+					wstate <= reading;
+				
 				elsif (io_write = '1') and (cs_all='1') then
 					data_set_all    <= data_in(10 downto 5) & "00" & data_in(15 downto 11) & "000" & data_in(4 downto 0) & "000";
 					ram_write_addr <= ram_write_addr - ram_write_addr;
@@ -276,7 +282,13 @@ process(clk_10M, resetn, cs_addr)
 						
 						
 						
+			when reading =>
 			
+				data_word <= read_data(15 downto 0);
+				
+				ram_we <= '0';
+				
+				wstate <= idle;
 				
 			
 			when setAll  =>

@@ -8,19 +8,16 @@ ORG 0
 	OUT PXL_D
 	
 	
-	
 	LOADI 1
 	OUT PXL_A
 	IN PXL_D
 	STORE variable
 	
-
 	LOADI 3
 	OUT PXL_A
 	LOAD variable
 	OUT PXL_D
 
-	
 
 	
 

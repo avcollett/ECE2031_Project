@@ -22,6 +22,7 @@ entity NeoPixelController is
 		cs_all	 : in   std_logic;
 		pxl_tog	 : in	  std_logic;
 		data_in   : in   std_logic_vector(15 downto 0);
+		data_word : inout std_logic_vector(15 downto 0);
 		sda       : out  std_logic
 	); 
 
@@ -37,7 +38,7 @@ architecture internals of NeoPixelController is
 	signal IncrementDirection : std_logic;
 
 	-- Signals for data coming out of memory
-	signal ram_read_data : std_logic_vector(23 downto 0);
+	signal ram_read_data, read_data : std_logic_vector(23 downto 0);
 	-- Signal to store the current output pixel's color data
 	signal pixel_buffer : std_logic_vector(23 downto 0);
 	
@@ -94,6 +95,7 @@ begin
 		data_b => x"000000",
 		wren_a => ram_we,
 		wren_b => '0',
+		q_a => read_data,
 		q_b => ram_read_data
 	);
 	
@@ -103,6 +105,9 @@ begin
 	-- using several counters to keep track of clock cycles,
 	-- which pixel is being written to, and which bit within
 	-- that data is being written.
+	
+
+	
 	process (clk_10M, resetn)
 		-- protocol timing values (in 100s of ns)
 		constant t1h : integer := 8; -- high time for '1'
@@ -221,6 +226,7 @@ process(clk_10M, resetn, cs_addr)
 			ram_write_buffer <= x"000000";
 			ram_write_addr <= x"00";
 			IncrementDirection <= '0';
+			data_word <= "ZZZZZZZZZZZZZZZZ";
 			-- Note that resetting this device does NOT clear the memory.
 			-- Clearing memory would require cycling through each address
 			-- and setting them all to 0.
@@ -242,6 +248,12 @@ process(clk_10M, resetn, cs_addr)
 					ram_we <= '1';
 					wstate <= storing;
 					
+				elsif (io_write = '0') and (cs_data = '1') then
+					
+					data_word <= read_data(15 downto 0);
+					ram_we <= '1';
+					wstate <= storing;
+					ram_read_addr <= data_word;
 					
 				elsif (io_write = '1') and (cs_all='1') then
 					data_set_all    <= data_in(10 downto 5) & "00" & data_in(15 downto 11) & "000" & data_in(4 downto 0) & "000";

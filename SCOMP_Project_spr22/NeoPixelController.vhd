@@ -22,7 +22,7 @@ entity NeoPixelController is
 		cs_all	 : in   std_logic;
 		pxl_tog	 : in	  std_logic;
 		data_in   : in   std_logic_vector(15 downto 0);
-		data_word : out std_logic_vector(15 downto 0);
+		data_word : out  std_logic_vector(15 downto 0);
 		sda       : out  std_logic
 	); 
 
@@ -31,14 +31,19 @@ end entity;
 architecture internals of NeoPixelController is
 	
 	-- Signals for the RAM read and write addresses
-	signal ram_read_addr, ram_write_addr : std_logic_vector(7 downto 0);
+	signal ram_read_addr, ram_write_addr, temp_addr : std_logic_vector(7 downto 0);
 	-- RAM write enable
 	signal ram_we : std_logic;
+	
+	signal read_toggle : std_logic;
 	
 	signal IncrementDirection : std_logic;
 
 	-- Signals for data coming out of memory
-	signal ram_read_data, read_data : std_logic_vector(23 downto 0);
+	signal ram_read_data: std_logic_vector(23 downto 0);
+	signal ram_read: std_logic_vector(23 downto 0);
+	
+	signal read_data: std_logic_vector(15 downto 0);
 	-- Signal to store the current output pixel's color data
 	signal pixel_buffer : std_logic_vector(23 downto 0);
 	
@@ -95,11 +100,11 @@ begin
 		data_b => x"000000",
 		wren_a => ram_we,
 		wren_b => '0',
-		q_a => read_data,
+		q_a => ram_read,
 		q_b => ram_read_data
 	);
 	
-
+	data_word <= (ram_read(23 downto 18) & ram_read(15 downto 11) & ram_read(7 downto 3)) when ((cs_data='1') and (io_write='0')) else "ZZZZZZZZZZZZZZZZ";
 
 	-- This process implements the NeoPixel protocol by
 	-- using several counters to keep track of clock cycles,
@@ -133,6 +138,7 @@ begin
 			bit_count := 23;
 			enc_count := 0;
 			reset_count := 1000;
+			read_toggle <= '0';
 			-- set sda inactive
 			sda <= '0';
 
@@ -181,9 +187,21 @@ begin
 			-- This IF block controls the RAM read address to step through pixels
 			if reset_count /= 0 then
 				ram_read_addr <= x"00";
+				
+			
+				
 			elsif (bit_count = 1) AND (enc_count = 0) then
 				-- increment the RAM address as each pixel ends
+				
+					
+					
+			
 				ram_read_addr <= ram_read_addr + 1;
+				temp_addr <= ram_read_addr;
+				
+			
+
+				
 			end if;
 			
 			
@@ -228,7 +246,6 @@ process(clk_10M, resetn, cs_addr)
 			ram_write_buffer <= x"000000";
 			ram_write_addr <= x"00";
 			IncrementDirection <= '0';
-			data_word <= "ZZZZZZZZZZZZZZZZ";
 			
 			-- Note that resetting this device does NOT clear the memory.
 			-- Clearing memory would require cycling through each address
@@ -236,6 +253,8 @@ process(clk_10M, resetn, cs_addr)
 		elsif rising_edge(clk_10M) then
 			case wstate is
 			when idle =>
+			
+				
 				if (io_write = '1') and (cs_data='1') then
 					-- latch the current data into the temporary storage register,
 					-- because this is the only time it'll be available.
@@ -247,16 +266,13 @@ process(clk_10M, resetn, cs_addr)
 					-- Change state
 					wstate <= storing;
 				elsif (io_write = '1') and (bit_24 = '1') then
-					--ram_write_buffer <= data_in(23 downto 16) & data_in(15 downto 8)  & data_in(7 downto 0);
 					ram_we <= '1';
 					wstate <= storing;
-					
-
-				elsif (io_write = '0') and (cs_data = '1') then
-					ram_we<= '0';
-			
-					wstate <= reading;
 				
+				elsif (io_write = '0') and (cs_data='1') then
+					wstate <= storing;
+					
+			
 				elsif (io_write = '1') and (cs_all='1') then
 					data_set_all    <= data_in(10 downto 5) & "00" & data_in(15 downto 11) & "000" & data_in(4 downto 0) & "000";
 					ram_write_addr <= ram_write_addr - ram_write_addr;
@@ -279,16 +295,7 @@ process(clk_10M, resetn, cs_addr)
 					
 					
 				end if;
-						
-						
-						
-			when reading =>
-			
-				data_word <= read_data(15 downto 0);
 				
-				ram_we <= '0';
-				
-				wstate <= idle;
 				
 			
 			when setAll  =>
@@ -307,6 +314,9 @@ process(clk_10M, resetn, cs_addr)
 					ram_we <= '0';
 					ram_write_addr <= data_in(7 downto 0);
 					
+				elsif (io_write = '0') and (cs_data='1') then
+					wstate <= storing;
+					ram_we <= '0';
 					
 				elsif (io_write = '1') and (pxl_tog='1') then
 				

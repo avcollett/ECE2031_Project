@@ -1,6 +1,4 @@
--- WS2812 communication interface starting point for
--- ECE 2031 final project spring 2022.
-
+-- L07-4 NeoPixel Controller
 library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all; 
@@ -18,7 +16,7 @@ entity NeoPixelController is
 		io_write  : in   std_logic ;
 		cs_addr   : in   std_logic ;
 		cs_data   : in   std_logic ;
-		bit_24_RB : in   std_logic;
+		bit_24_RB : in   std_logic; 
 		bit_24_G	 : in   std_logic;
 		cs_all	 : in   std_logic;
 		pxl_tog	 : in	  std_logic;
@@ -32,23 +30,27 @@ end entity;
 architecture internals of NeoPixelController is
 	
 	-- Signals for the RAM read and write addresses
-	signal ram_read_addr, ram_write_addr, temp_addr : std_logic_vector(7 downto 0);
+	signal ram_read_addr, ram_write_addr : std_logic_vector(7 downto 0);
+	
 	-- RAM write enable
 	signal ram_we : std_logic;
 	
-	signal read_toggle : std_logic;
-	
+	--Holds the auto-increment direction
 	signal IncrementDirection : std_logic;
 
 	-- Signals for data coming out of memory
 	signal ram_read_data: std_logic_vector(23 downto 0);
-	signal ram_read: std_logic_vector(23 downto 0);
 	
-	signal read_data: std_logic_vector(15 downto 0);
+	-- Holds data from A port in memory for user read function
+	signal ram_read: std_logic_vector(23 downto 0); 
+	
 	-- Signal to store the current output pixel's color data
 	signal pixel_buffer : std_logic_vector(23 downto 0);
 	
+	--Holds the color to be set to all pixels
 	signal data_set_all : std_logic_vector(23 downto 0);
+	
+	
 	signal TempColorHolder : std_logic_vector(23 downto 0);
 
 	-- Signal SCOMP will write to before it gets stored into memory
@@ -106,15 +108,15 @@ begin
 		q_b => ram_read_data
 	);
 	
+	-- Set the data to the io-data bus when the user is trying to read data
 	data_word <= (ram_read(23 downto 18) & ram_read(15 downto 11) & ram_read(7 downto 3)) when ((cs_data='1') and (io_write='0')) else "ZZZZZZZZZZZZZZZZ";
 
+	
+	
 	-- This process implements the NeoPixel protocol by
 	-- using several counters to keep track of clock cycles,
 	-- which pixel is being written to, and which bit within
 	-- that data is being written.
-	
-
-	
 	process (clk_10M, resetn)
 		-- protocol timing values (in 100s of ns)
 		constant t1h : integer := 8; -- high time for '1'
@@ -140,7 +142,6 @@ begin
 			bit_count := 23;
 			enc_count := 0;
 			reset_count := 1000;
-			read_toggle <= '0';
 			-- set sda inactive
 			sda <= '0';
 
@@ -195,13 +196,7 @@ begin
 			elsif (bit_count = 1) AND (enc_count = 0) then
 				-- increment the RAM address as each pixel ends
 				
-					
-					
-			
 				ram_read_addr <= ram_read_addr + 1;
-				temp_addr <= ram_read_addr;
-				
-			
 
 				
 			end if;
@@ -242,6 +237,9 @@ process(clk_10M, resetn, cs_addr)
 		-- Note that 'ram_we' is *not* implemented as a Moore output of this state
 		-- machine, because Moore outputs are susceptible to glitches, and
 		-- that's a bad thing for memory control signals.
+		
+		
+		--Reset Signals to a default
 		if resetn = '0' then
 			wstate <= idle;
 			ram_we <= '0';
@@ -254,6 +252,7 @@ process(clk_10M, resetn, cs_addr)
 			-- and setting them all to 0.
 		elsif rising_edge(clk_10M) then
 			case wstate is
+			-- Default State
 			when idle =>
 			
 				
@@ -267,35 +266,46 @@ process(clk_10M, resetn, cs_addr)
 					ram_we <= '1';
 					-- Change state
 					wstate <= storing;
+				
+				
+				
+				elsif (io_write = '1') and (bit_24_G = '1') then
+					-- Set upper 8 bits of the 24 bit color. Does not update the pixel
+					TempColorHolder <= ((TempColorHolder and "000000001111111111111111") or (data_in(7 downto 0) & "0000000000000000"));
 					
 				elsif (io_write = '1') and (bit_24_RB = '1') then
+					-- Add the datainput to the lower 16 bits of the TempColorHolder and update the pixel with 
+					-- The current Temp Color Holder
+					
+					-- Users should set the green component of the pixel first
 					TempColorHolder <= ((TempColorHolder and "111111110000000000000000") or ("00000000" & data_in(15 downto 0)));
 					ram_write_buffer <= TempColorHolder;
-					ram_we <= '1';
-					wstate <= storing;
+					ram_we <= '1'; -- write
+					wstate <= storing; -- store and auto inc.
 				
+				
+				-- When reading, auto increment (going to storing to reuse the auto increment code thats in storing)
 				elsif (io_write = '0') and (cs_data='1') then
 					wstate <= storing;
 					
-				elsif (io_write = '1') and (bit_24_G = '1') then
-					TempColorHolder <= ((TempColorHolder and "000000001111111111111111") or (data_in(7 downto 0) & "0000000000000000"));
 				
 				
-					
-					
-					
 				elsif (io_write = '1') and (cs_all='1') then
+					-- store data_in into a signal to hold its value
 					data_set_all    <= data_in(10 downto 5) & "00" & data_in(15 downto 11) & "000" & data_in(4 downto 0) & "000";
+					-- Address = 0
 					ram_write_addr <= ram_write_addr - ram_write_addr;
+					-- Set the first pixel to the new color.
 					ram_write_buffer <= data_set_all;
 					ram_we <= '1';
-					wstate <= setAll;
+					wstate <= setAll; -- goto set all state
 
 				
+				-- set address using data_in
 				elsif (io_write = '1') and (cs_addr='1') then
 					ram_write_addr <= data_in(7 downto 0);
 					
-				
+				-- Toggle autoincrement direction
 				elsif (io_write = '1') and (pxl_tog='1') then
 				
 					if(IncrementDirection = '0') then
@@ -310,25 +320,41 @@ process(clk_10M, resetn, cs_addr)
 				
 			
 			when setAll  =>
+				-- if after last pixel
 				if(ram_write_addr = 256) then 
 					ram_we <= '0';
+					-- reset to address 0 and return to idle
 					wstate <= idle;
 					ram_write_addr <= ram_write_addr - ram_write_addr;
 					
+					
+					
+				-- The Following if statements are similar to in statements in idle.
+				-- They are designed to handle what happens if the user interacts with
+				-- the peripheral when the set-all loop is still running
+				
+				-- If a situation doesn't need storing then it goes back to idle
+				-- Any data writing defaults to writing to pixel zero for consistancy
+				-- since the end of the set-all loop also sets the address to zero
+				
+				-- if 16 bit data is written 
 				elsif (io_write = '1') and (cs_data='1') then
 					wstate <= storing;
 					ram_write_addr <= ram_write_addr - ram_write_addr;
 					ram_write_buffer  <= data_in(10 downto 5) & "00" & data_in(15 downto 11) & "000" & data_in(4 downto 0) & "000";
-					
+				
+				-- If an address is set
 				elsif (io_write = '1') and (cs_addr='1') then
 					wstate <= idle;
 					ram_we <= '0';
 					ram_write_addr <= data_in(7 downto 0);
 					
+				-- if data is read
 				elsif (io_write = '0') and (cs_data='1') then
 					wstate <= storing;
-					ram_we <= '0';
-					
+					ram_write_addr <= ram_write_addr - ram_write_addr;
+				
+				-- If lower 16 bits of a 24 bit color are written
 				elsif (io_write = '1') and (bit_24_RB = '1') then
 					wstate <= storing;
 					ram_write_addr <= ram_write_addr - ram_write_addr;
@@ -336,14 +362,14 @@ process(clk_10M, resetn, cs_addr)
 					TempColorHolder <= ((TempColorHolder and "111111110000000000000000") or ("00000000" & data_in(15 downto 0)));
 					ram_write_buffer <= TempColorHolder;
 					
-					
+				-- If upper 8 bits of a 24 bit color are written
 				elsif (io_write = '1') and (bit_24_G = '1') then
 					TempColorHolder <= ((TempColorHolder and "000000001111111111111111") or (data_in(7 downto 0) & "0000000000000000"));
 					ram_we <= '0';
 					ram_write_addr <= ram_write_addr - ram_write_addr;
 					wstate <= idle;
 					
-					
+				-- if increment direction is switched. Does not break out of the set all loop.
 				elsif (io_write = '1') and (pxl_tog='1') then
 				
 					if(IncrementDirection = '0') then
@@ -352,8 +378,9 @@ process(clk_10M, resetn, cs_addr)
 						IncrementDirection <= '0';
 					end if;
 					
-					
+				-- if the peripheral isn't interacted with and this isn't the last pixel
 				else
+					-- goto next pixel and set data.
 					ram_write_addr <= ram_write_addr + 1;
 					ram_write_buffer <= data_set_all;
 					
@@ -362,18 +389,21 @@ process(clk_10M, resetn, cs_addr)
 				
 				
 			when storing =>
-				-- All that's needed here is to lower ram_we.  The RAM will be
-				-- storing data on this clock edge, so ram_we can go low at the
-				-- same time.
+				-- lowers ram_we and handles auto incrementing
 				if IncrementDirection = '0' then
-					ram_write_addr <= ram_write_addr + 1;
+				if ram_write_addr /= 255 then 
+						ram_write_addr <= ram_write_addr + 1;
+					end if;
 				elsif IncrementDirection = '1' then
-					ram_write_addr <= ram_write_addr - 1;
+					if ram_write_addr /= 0 then 
+						ram_write_addr <= ram_write_addr - 1;
+					end if;
 				end if;
 				
 				
 				ram_we <= '0';
 				wstate <= idle;
+				
 			when others =>
 				wstate <= idle;
 			end case;

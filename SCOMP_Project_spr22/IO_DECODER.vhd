@@ -23,7 +23,8 @@ ENTITY IO_DECODER IS
 	 PXL_ALL_24_EN : OUT STD_LOGIC;
 	 BIT_24_GB     : OUT STD_LOGIC;
 	 BIT_24_R    	: OUT STD_LOGIC;
-	 
+	 PATTERN_INC   : OUT STD_LOGIC;
+	 PATTERN_ALT   : OUT STD_LOGIC;
 	 PXL_TOG_I		: OUT STD_LOGIC
   );
 
@@ -49,5 +50,7 @@ begin
   BIT_24_GB		<= '1' WHEN (ADDR_INT = 16#0B4#) and (IO_CYCLE = '1') ELSE '0';
   BIT_24_R		<= '1' WHEN (ADDR_INT = 16#0B5#) and (IO_CYCLE = '1') ELSE '0';
   PXL_ALL_24_EN <= '1' WHEN (ADDR_INT = 16#0B6#) and (IO_CYCLE = '1') ELSE '0';
+  PATTERN_INC  <= '1' WHEN (ADDR_INT = 16#0B7#) and (IO_CYCLE = '1') ELSE '0';
+  PATTERN_ALT  <= '1' WHEN (ADDR_INT = 16#0B8#) and (IO_CYCLE = '1') ELSE '0';
       
 END a;

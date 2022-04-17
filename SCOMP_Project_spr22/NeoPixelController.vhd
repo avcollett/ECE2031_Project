@@ -23,6 +23,8 @@ entity NeoPixelController is
 		pxl_tog	 : in	  std_logic;
 		data_in   : in   std_logic_vector(15 downto 0);
 		data_word : out  std_logic_vector(15 downto 0);
+		pattern_inc  : in   std_logic;
+		pattern_alt : in std_logic;
 		sda       : out  std_logic
 	); 
 
@@ -60,6 +62,11 @@ architecture internals of NeoPixelController is
 	-- RAM interface state machine signals
 	type write_states is (idle, setAll, storing, reading);
 	signal wstate: write_states;
+
+	--algorithm to set all w/ patterns
+	signal pattern1    : std_logic;
+	
+	signal pattern2    : std_logic;
 
 	
 begin
@@ -324,7 +331,26 @@ process(clk_10M, resetn, cs_addr)
 					else
 						IncrementDirection <= '0';
 					end if;
-					
+				
+				elsif (io_write = '1') and (pattern_inc = '1') then
+					pattern1 <= '1';
+
+					data_set_all    <= data_in(10 downto 5) & "00" & data_in(15 downto 11) & "000" & data_in(4 downto 0) & "000";
+					-- Address = 0
+					ram_write_addr <= ram_write_addr - ram_write_addr;
+					-- Set the first pixel to the new color.
+					ram_write_buffer <= data_set_all;
+					ram_we <= '1';
+					wstate <= setAll; -- goto set all state
+				elsif (io_write = '1') and (pattern_alt = '1') then
+					pattern2 <= '1';
+					data_set_all    <= data_in(10 downto 5) & "00" & data_in(15 downto 11) & "000" & data_in(4 downto 0) & "000";
+					-- Address = 0
+					ram_write_addr <= ram_write_addr - ram_write_addr;
+					-- Set the first pixel to the new color.
+					ram_write_buffer <= data_set_all;
+					ram_we <= '1';
+					wstate <= setAll; -- goto set all state
 				
 				end if;
 				
@@ -388,6 +414,16 @@ process(clk_10M, resetn, cs_addr)
 					else
 						IncrementDirection <= '0';
 					end if;
+					
+				elsif (io_write = '1') and (pattern1 = '1') then
+					data_set_all <= data_set_all + 30;
+					ram_write_addr <= ram_write_addr + 1;
+					ram_write_buffer <= data_set_all;
+					
+				elsif (io_write = '1') and (pattern2 = '1') then
+					data_set_all <= not(data_set_all);
+					ram_write_addr <= ram_write_addr + 1;
+					ram_write_buffer <= data_set_all;
 					
 				-- if the peripheral isn't interacted with and this isn't the last pixel
 				else

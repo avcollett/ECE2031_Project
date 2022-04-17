@@ -19,6 +19,7 @@ entity NeoPixelController is
 		bit_24_GB : in   std_logic; 
 		bit_24_R  : in   std_logic;
 		cs_all	 : in   std_logic;
+		cs_all_24 : in   std_logic;
 		pxl_tog	 : in	  std_logic;
 		data_in   : in   std_logic_vector(15 downto 0);
 		data_word : out  std_logic_vector(15 downto 0);
@@ -294,6 +295,15 @@ process(clk_10M, resetn, cs_addr)
 					-- store data_in into a signal to hold its value
 					data_set_all    <= data_in(10 downto 5) & "00" & data_in(15 downto 11) & "000" & data_in(4 downto 0) & "000";
 					-- Address = 0
+					ram_write_addr <= ram_write_addr - ram_write_addr;
+					-- Set the first pixel to the new color.
+					ram_write_buffer <= data_set_all;
+					ram_we <= '1';
+					wstate <= setAll; -- goto set all state
+					
+				elsif (io_write = '1') and (cs_all_24 ='1') then
+					TempColorHolder <= ((TempColorHolder and "000000001111111100000000") or (data_in(15 downto 8) & "00000000" & data_in(7 downto 0)));
+					data_set_all <= TempColorHolder;
 					ram_write_addr <= ram_write_addr - ram_write_addr;
 					-- Set the first pixel to the new color.
 					ram_write_buffer <= data_set_all;

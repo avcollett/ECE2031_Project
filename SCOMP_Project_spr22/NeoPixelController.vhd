@@ -110,7 +110,7 @@ begin
 	);
 	
 	-- Set the data to the io-data bus when the user is trying to read data
-	data_word <= (ram_read(23 downto 18) & ram_read(15 downto 11) & ram_read(7 downto 3)) when ((cs_data='1') and (io_write='0')) else "ZZZZZZZZZZZZZZZZ";
+	data_word <= (ram_read(15 downto 11) & ram_read(23 downto 18) & ram_read(7 downto 3)) when ((cs_data='1') and (io_write='0')) else "ZZZZZZZZZZZZZZZZ";
 
 	
 	
@@ -248,6 +248,7 @@ process(clk_10M, resetn, cs_addr)
 			ram_write_addr <= x"00";
 			IncrementDirection <= '0';
 			TempColorHolder <= "000000000000000000000000";
+			
 			-- Note that resetting this device does NOT clear the memory.
 			-- Clearing memory would require cycling through each address
 			-- and setting them all to 0.
@@ -374,7 +375,7 @@ process(clk_10M, resetn, cs_addr)
 					
 				-- If upper 8 bits of a 24 bit color are written
 				elsif (io_write = '1') and (bit_24_R = '1') then
-					TempColorHolder <= ((TempColorHolder and "000000001111111111111111") or (data_in(7 downto 0) & "0000000000000000"));
+					TempColorHolder <= ((TempColorHolder and "000000001111111111111111") or ((data_in(15 downto 8) & "00000000" & data_in(7 downto 0))));
 					ram_we <= '0';
 					ram_write_addr <= ram_write_addr - ram_write_addr;
 					wstate <= idle;

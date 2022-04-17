@@ -2,8 +2,9 @@
 
 ORG 0
 Start:
+		
 		IN 	   Switches
-		ADDI   -1
+	
 		JZero  Demo1
 		ADDI   -1
 		JZero  Demo2
@@ -42,11 +43,7 @@ Demo1:
 		NOP
 		NOP
 		NOP
-		NOP
-		NOP
-		NOP
-		NOP
-		NOP
+
 		LOADI  &H006F
 		OUT    PXL_24_G
 		LOADI  &HFF00
@@ -61,7 +58,7 @@ Demo2:
 		LOADI  1
 		OUT    PXL_A
 
-		LOADI  10
+		LOADI  5000
 		OUT    PXL_D
 		
 		LOADI  1

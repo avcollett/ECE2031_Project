@@ -23,6 +23,7 @@ entity NeoPixelController is
 		cs_all	 : in   std_logic;
 		pxl_tog	 : in	  std_logic;
 		data_in   : in   std_logic_vector(15 downto 0);
+		data_word : out  std_logic_vector(15 downto 0);
 		sda       : out  std_logic
 	); 
 
@@ -31,14 +32,19 @@ end entity;
 architecture internals of NeoPixelController is
 	
 	-- Signals for the RAM read and write addresses
-	signal ram_read_addr, ram_write_addr : std_logic_vector(7 downto 0);
+	signal ram_read_addr, ram_write_addr, temp_addr : std_logic_vector(7 downto 0);
 	-- RAM write enable
 	signal ram_we : std_logic;
+	
+	signal read_toggle : std_logic;
 	
 	signal IncrementDirection : std_logic;
 
 	-- Signals for data coming out of memory
-	signal ram_read_data : std_logic_vector(23 downto 0);
+	signal ram_read_data: std_logic_vector(23 downto 0);
+	signal ram_read: std_logic_vector(23 downto 0);
+	
+	signal read_data: std_logic_vector(15 downto 0);
 	-- Signal to store the current output pixel's color data
 	signal pixel_buffer : std_logic_vector(23 downto 0);
 	
@@ -49,7 +55,7 @@ architecture internals of NeoPixelController is
 	signal ram_write_buffer : std_logic_vector(23 downto 0);
 
 	-- RAM interface state machine signals
-	type write_states is (idle, setAll, storing);
+	type write_states is (idle, setAll, storing, reading);
 	signal wstate: write_states;
 
 	
@@ -96,15 +102,19 @@ begin
 		data_b => x"000000",
 		wren_a => ram_we,
 		wren_b => '0',
+		q_a => ram_read,
 		q_b => ram_read_data
 	);
 	
-
+	data_word <= (ram_read(23 downto 18) & ram_read(15 downto 11) & ram_read(7 downto 3)) when ((cs_data='1') and (io_write='0')) else "ZZZZZZZZZZZZZZZZ";
 
 	-- This process implements the NeoPixel protocol by
 	-- using several counters to keep track of clock cycles,
 	-- which pixel is being written to, and which bit within
 	-- that data is being written.
+	
+
+	
 	process (clk_10M, resetn)
 		-- protocol timing values (in 100s of ns)
 		constant t1h : integer := 8; -- high time for '1'
@@ -130,6 +140,7 @@ begin
 			bit_count := 23;
 			enc_count := 0;
 			reset_count := 1000;
+			read_toggle <= '0';
 			-- set sda inactive
 			sda <= '0';
 
@@ -145,6 +156,7 @@ begin
 				reset_count := reset_count - 1;
 				-- load data from memory
 				pixel_buffer <= ram_read_data;
+			
 				
 			else -- not in reset period (i.e. currently sending data)
 				-- handle reaching end of a bit
@@ -155,6 +167,7 @@ begin
 					if bit_count = 0 then -- is end of this pixels's data?
 						bit_count := 23; -- start a new pixel
 						pixel_buffer <= ram_read_data;
+						
 						if pixel_count = npix-1 then -- is end of all pixels?
 							-- begin the reset period
 							reset_count := 1000;
@@ -176,9 +189,21 @@ begin
 			-- This IF block controls the RAM read address to step through pixels
 			if reset_count /= 0 then
 				ram_read_addr <= x"00";
+				
+			
+				
 			elsif (bit_count = 1) AND (enc_count = 0) then
 				-- increment the RAM address as each pixel ends
+				
+					
+					
+			
 				ram_read_addr <= ram_read_addr + 1;
+				temp_addr <= ram_read_addr;
+				
+			
+
+				
 			end if;
 			
 			
@@ -230,6 +255,8 @@ process(clk_10M, resetn, cs_addr)
 		elsif rising_edge(clk_10M) then
 			case wstate is
 			when idle =>
+			
+				
 				if (io_write = '1') and (cs_data='1') then
 					-- latch the current data into the temporary storage register,
 					-- because this is the only time it'll be available.
@@ -245,6 +272,9 @@ process(clk_10M, resetn, cs_addr)
 					TempColorHolder <= ((TempColorHolder and "111111110000000000000000") or ("00000000" & data_in(15 downto 0)));
 					ram_write_buffer <= TempColorHolder;
 					ram_we <= '1';
+					wstate <= storing;
+				
+				elsif (io_write = '0') and (cs_data='1') then
 					wstate <= storing;
 					
 				elsif (io_write = '1') and (bit_24_G = '1') then
@@ -276,10 +306,7 @@ process(clk_10M, resetn, cs_addr)
 					
 				
 				end if;
-						
-						
-						
-			
+				
 				
 			
 			when setAll  =>
@@ -298,6 +325,9 @@ process(clk_10M, resetn, cs_addr)
 					ram_we <= '0';
 					ram_write_addr <= data_in(7 downto 0);
 					
+				elsif (io_write = '0') and (cs_data='1') then
+					wstate <= storing;
+					ram_we <= '0';
 					
 				elsif (io_write = '1') and (bit_24_RB = '1') then
 					wstate <= storing;

@@ -16,8 +16,8 @@ entity NeoPixelController is
 		io_write  : in   std_logic ;
 		cs_addr   : in   std_logic ;
 		cs_data   : in   std_logic ;
-		bit_24_RB : in   std_logic; 
-		bit_24_G	 : in   std_logic;
+		bit_24_GB : in   std_logic; 
+		bit_24_R  : in   std_logic;
 		cs_all	 : in   std_logic;
 		pxl_tog	 : in	  std_logic;
 		data_in   : in   std_logic_vector(15 downto 0);
@@ -269,16 +269,16 @@ process(clk_10M, resetn, cs_addr)
 				
 				
 				
-				elsif (io_write = '1') and (bit_24_G = '1') then
+				elsif (io_write = '1') and (bit_24_R = '1') then
 					-- Set upper 8 bits of the 24 bit color. Does not update the pixel
-					TempColorHolder <= ((TempColorHolder and "000000001111111111111111") or (data_in(7 downto 0) & "0000000000000000"));
+					TempColorHolder <= ((TempColorHolder and "111111110000000011111111") or ("00000000" & data_in(7 downto 0) & "00000000"));
 					
-				elsif (io_write = '1') and (bit_24_RB = '1') then
+				elsif (io_write = '1') and (bit_24_GB = '1') then
 					-- Add the datainput to the lower 16 bits of the TempColorHolder and update the pixel with 
 					-- The current Temp Color Holder
 					
 					-- Users should set the green component of the pixel first
-					TempColorHolder <= ((TempColorHolder and "111111110000000000000000") or ("00000000" & data_in(15 downto 0)));
+					TempColorHolder <= ((TempColorHolder and "000000001111111100000000") or (data_in(15 downto 8) & "00000000" & data_in(7 downto 0)));
 					ram_write_buffer <= TempColorHolder;
 					ram_we <= '1'; -- write
 					wstate <= storing; -- store and auto inc.
@@ -355,15 +355,15 @@ process(clk_10M, resetn, cs_addr)
 					ram_write_addr <= ram_write_addr - ram_write_addr;
 				
 				-- If lower 16 bits of a 24 bit color are written
-				elsif (io_write = '1') and (bit_24_RB = '1') then
+				elsif (io_write = '1') and (bit_24_GB = '1') then
 					wstate <= storing;
 					ram_write_addr <= ram_write_addr - ram_write_addr;
 					
-					TempColorHolder <= ((TempColorHolder and "111111110000000000000000") or ("00000000" & data_in(15 downto 0)));
+					TempColorHolder <= ((TempColorHolder and "111111110000000011111111") or ("00000000" & data_in(7 downto 0) & "00000000"));
 					ram_write_buffer <= TempColorHolder;
 					
 				-- If upper 8 bits of a 24 bit color are written
-				elsif (io_write = '1') and (bit_24_G = '1') then
+				elsif (io_write = '1') and (bit_24_R = '1') then
 					TempColorHolder <= ((TempColorHolder and "000000001111111111111111") or (data_in(7 downto 0) & "0000000000000000"));
 					ram_we <= '0';
 					ram_write_addr <= ram_write_addr - ram_write_addr;

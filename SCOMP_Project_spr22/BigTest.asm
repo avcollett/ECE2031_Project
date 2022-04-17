@@ -10,6 +10,8 @@ Start:
 		JZero  Demo2
 		ADDI   -1
 		JZero  Demo3
+		ADDI   -1
+		JZero  Demo4
 		
 		OUT	   INC_REV
 		LOADI  7
@@ -40,6 +42,155 @@ Demo1:
 		NOP		
 		NOP		
 		NOP		
+		NOP
+		NOP
+		NOP
+		NOP		
+		NOP		
+		NOP		
+		NOP		
+		NOP
+		NOP
+		NOP
+		NOP		
+		NOP		
+		NOP		
+		NOP		
+		NOP
+		NOP
+		NOP
+		NOP		
+		NOP		
+		NOP		
+		NOP		
+		NOP
+		NOP
+		NOP
+		NOP		
+		NOP		
+		NOP		
+		NOP		
+		NOP
+		NOP
+		NOP
+		NOP
+		NOP
+		NOP
+		NOP		
+		NOP		
+		NOP		
+		NOP		
+		NOP
+		NOP
+		NOP
+		NOP		
+		NOP		
+		NOP		
+		NOP		
+		NOP
+		NOP
+		NOP
+		NOP		
+		NOP		
+		NOP		
+		NOP		
+		NOP
+		NOP
+		NOP
+		NOP
+		NOP
+		NOP
+		NOP		
+		NOP		
+		NOP		
+		NOP		
+		NOP
+		NOP
+		NOP
+		NOP		
+		NOP		
+		NOP		
+		NOP		
+		NOP
+		NOP
+		NOP
+		NOP		
+		NOP		
+		NOP		
+		NOP		
+		NOP
+		NOP
+		NOP
+		NOP
+		NOP
+		NOP
+		NOP		
+		NOP		
+		NOP		
+		NOP		
+		NOP
+		NOP
+		NOP
+		NOP		
+		NOP		
+		NOP		
+		NOP		
+		NOP
+		NOP
+		NOP
+		NOP		
+		NOP		
+		NOP		
+		NOP		
+		NOP
+		NOP
+		NOP
+		NOP
+		NOP
+		NOP
+		NOP		
+		NOP		
+		NOP		
+		NOP		
+		NOP
+		NOP
+		NOP
+		NOP		
+		NOP		
+		NOP		
+		NOP		
+		NOP
+		NOP
+		NOP
+		NOP		
+		NOP		
+		NOP		
+		NOP		
+		NOP
+		NOP
+		NOP
+		NOP
+		NOP
+		NOP
+		NOP		
+		NOP		
+		NOP		
+		NOP		
+		NOP
+		NOP
+		NOP
+		NOP		
+		NOP		
+		NOP		
+		NOP		
+		NOP
+		NOP
+		NOP
+		NOP		
+		NOP		
+		NOP		
+		NOP		
+		NOP
 		NOP
 		NOP
 		NOP
@@ -93,6 +244,15 @@ Demo3:
 		OUT    PXL_D
 		JUMP   End
 		
+		
+Demo4:
+
+		LOADI  &H006F
+	OUT    PXL_24_G
+	LOADI  &HFF00
+	OUT    PXL_ALL_24
+	JUMP End
+		
 End:
 		JUMP   End
 
@@ -110,3 +270,4 @@ PXL_ALL:   EQU &H0B2
 INC_REV:   EQU &H0B3
 PXL_24_RB:  EQU &H0B4
 PXL_24_G:   EQU &H0B5
+PXL_ALL_24: EQU &H0B6

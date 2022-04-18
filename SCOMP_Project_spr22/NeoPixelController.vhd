@@ -21,10 +21,11 @@ entity NeoPixelController is
 		cs_all	 : in   std_logic;
 		cs_all_24 : in   std_logic;
 		pxl_tog	 : in	  std_logic;
-		data_in   : in   std_logic_vector(15 downto 0);
-		data_word : out  std_logic_vector(15 downto 0);
 		pattern_inc  : in   std_logic;
 		pattern_alt : in std_logic;
+		data_in   : in   std_logic_vector(15 downto 0);
+		data_word : out  std_logic_vector(15 downto 0);
+		
 		sda       : out  std_logic
 	); 
 

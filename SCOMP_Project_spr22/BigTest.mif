@@ -11,13 +11,13 @@ CONTENT
     [000..7FF] : 0000;  -- Default to NOP
 
            000 : 9000;  -- 		IN 	   Switches
-           001 : 403C;  -- 		JZero  Demo1
+           001 : 404C;  -- 		JZero  Demo1
            002 : 6FFF;  -- 		ADDI   -1
-           003 : 404A;  -- 		JZero  Demo2
+           003 : 405A;  -- 		JZero  Demo2
            004 : 6FFF;  -- 		ADDI   -1
-           005 : 4054;  -- 		JZero  Demo3
+           005 : 4064;  -- 		JZero  Demo3
            006 : 6FFF;  -- 		ADDI   -1
-           007 : 4059;  -- 		JZero  Demo4
+           007 : 4069;  -- 		JZero  Demo4
            008 : 98B3;  -- 		OUT	   INC_REV
            009 : B817;  -- 		LOADI  23
            00A : 98B0;  -- 		OUT    PXL_A
@@ -69,55 +69,55 @@ CONTENT
            038 : 98B1;  -- 		OUT    PXL_D
            039 : 6864;  -- 		ADDI   100
            03A : 98B1;  -- 		OUT    PXL_D
-           03B : 288C;  -- 		JUMP   End
-           03C : B80A;  -- 		LOADI  10
-           03D : 98B2;  -- 		OUT    PXL_ALL
-           03E : B880;  -- 		LOADI  128
-           03F : 6FFF;  -- 		ADDI -1
-           040 : 383F;  -- 		JPOS Wait
-           041 : B86F;  -- 		LOADI  &H006F
-           042 : 98B5;  -- 		OUT    PXL_24_R
-           043 : BF00;  -- 		LOADI  &HFF00
-           044 : 98B4;  -- 		OUT    PXL_24_GB
-           045 : B86F;  -- 		LOADI  &H006F
-           046 : 98B5;  -- 		OUT    PXL_24_R
-           047 : BF00;  -- 		LOADI  &HFF00
-           048 : 98B4;  -- 		OUT    PXL_24_GB
-           049 : 288C;  -- 		JUMP   End
-           04A : B801;  -- 		LOADI  1
-           04B : 98B0;  -- 		OUT    PXL_A
-           04C : BB88;  -- 		LOADI  5000
-           04D : 98B1;  -- 		OUT    PXL_D
-           04E : B801;  -- 		LOADI  1
-           04F : 98B0;  -- 		OUT    PXL_A
-           050 : 90B1;  -- 		IN	   PXL_D
-           051 : 9804;  -- 		OUT    Hex0
-           052 : 98B1;  -- 		OUT    PXL_D
-           053 : 288C;  -- 		JUMP   End
-           054 : B86F;  -- 		LOADI  &H006F
-           055 : 98B5;  -- 		OUT    PXL_24_R
-           056 : BF00;  -- 		LOADI  &HFF00
-           057 : 98B6;  -- 		OUT    PXL_ALL_24
-           058 : 288C;  -- 		JUMP End
-           059 : B800;  -- 		LOADI  0
-           05A : 98B0;  -- 		OUT    PXL_A
-           05B : B80A;  -- 		LOADI  10
-           05C : 98B1;  -- 		OUT    PXL_D
-           05D : 6864;  -- 		ADDI   100
-           05E : 98B1;  -- 		OUT    PXL_D
-           05F : 6864;  -- 		ADDI   100
-           060 : 98B1;  -- 		OUT    PXL_D
-           061 : 6864;  -- 		ADDI   100
+           03B : 6864;  -- 		ADDI   100
+           03C : 98B1;  -- 		OUT    PXL_D
+           03D : 6864;  -- 		ADDI   100
+           03E : 98B1;  -- 		OUT    PXL_D
+           03F : 6864;  -- 		ADDI   100
+           040 : 98B1;  -- 		OUT    PXL_D
+           041 : 6864;  -- 		ADDI   100
+           042 : 98B1;  -- 		OUT    PXL_D
+           043 : 6864;  -- 		ADDI   100
+           044 : 98B1;  -- 		OUT    PXL_D
+           045 : 6864;  -- 		ADDI   100
+           046 : 98B1;  -- 		OUT    PXL_D
+           047 : 6864;  -- 		ADDI   100
+           048 : 98B1;  -- 		OUT    PXL_D
+           049 : 6864;  -- 		ADDI   100
+           04A : 98B1;  -- 		OUT    PXL_D
+           04B : 28AC;  -- 		JUMP   End
+           04C : B80A;  -- 		LOADI  10
+           04D : 98B2;  -- 		OUT    PXL_ALL
+           04E : B880;  -- 		LOADI  128
+           04F : 6FFF;  -- 		ADDI -1
+           050 : 384F;  -- 		JPOS Wait
+           051 : B86F;  -- 		LOADI  &H006F
+           052 : 98B5;  -- 		OUT    PXL_24_R
+           053 : BF00;  -- 		LOADI  &HFF00
+           054 : 98B4;  -- 		OUT    PXL_24_GB
+           055 : B86F;  -- 		LOADI  &H006F
+           056 : 98B5;  -- 		OUT    PXL_24_R
+           057 : BF00;  -- 		LOADI  &HFF00
+           058 : 98B4;  -- 		OUT    PXL_24_GB
+           059 : 28AC;  -- 		JUMP   End
+           05A : B801;  -- 		LOADI  1
+           05B : 98B0;  -- 		OUT    PXL_A
+           05C : BB88;  -- 		LOADI  5000
+           05D : 98B1;  -- 		OUT    PXL_D
+           05E : B801;  -- 		LOADI  1
+           05F : 98B0;  -- 		OUT    PXL_A
+           060 : 90B1;  -- 		IN	   PXL_D
+           061 : 9804;  -- 		OUT    Hex0
            062 : 98B1;  -- 		OUT    PXL_D
-           063 : 6864;  -- 		ADDI   100
-           064 : 98B1;  -- 		OUT    PXL_D
-           065 : 6864;  -- 		ADDI   100
-           066 : 98B1;  -- 		OUT    PXL_D
-           067 : 6864;  -- 		ADDI   100
-           068 : 98B1;  -- 		OUT    PXL_D
-           069 : 6864;  -- 		ADDI   100
-           06A : 98B1;  -- 		OUT    PXL_D
-           06B : 6864;  -- 		ADDI   100
+           063 : 28AC;  -- 		JUMP   End
+           064 : B86F;  -- 		LOADI  &H006F
+           065 : 98B5;  -- 		OUT    PXL_24_R
+           066 : BF00;  -- 		LOADI  &HFF00
+           067 : 98B6;  -- 		OUT    PXL_ALL_24
+           068 : 28AC;  -- 		JUMP End
+           069 : B800;  -- 		LOADI  0
+           06A : 98B0;  -- 		OUT    PXL_A
+           06B : B80A;  -- 		LOADI  10
            06C : 98B1;  -- 		OUT    PXL_D
            06D : 6864;  -- 		ADDI   100
            06E : 98B1;  -- 		OUT    PXL_D
@@ -149,6 +149,38 @@ CONTENT
            088 : 98B1;  -- 		OUT    PXL_D
            089 : 6864;  -- 		ADDI   100
            08A : 98B1;  -- 		OUT    PXL_D
-           08B : 288C;  -- 		JUMP   End
-           08C : 288C;  -- 		JUMP   End
+           08B : 6864;  -- 		ADDI   100
+           08C : 98B1;  -- 		OUT    PXL_D
+           08D : 6864;  -- 		ADDI   100
+           08E : 98B1;  -- 		OUT    PXL_D
+           08F : 6864;  -- 		ADDI   100
+           090 : 98B1;  -- 		OUT    PXL_D
+           091 : 6864;  -- 		ADDI   100
+           092 : 98B1;  -- 		OUT    PXL_D
+           093 : 6864;  -- 		ADDI   100
+           094 : 98B1;  -- 		OUT    PXL_D
+           095 : 6864;  -- 		ADDI   100
+           096 : 98B1;  -- 		OUT    PXL_D
+           097 : 6864;  -- 		ADDI   100
+           098 : 98B1;  -- 		OUT    PXL_D
+           099 : 6864;  -- 		ADDI   100
+           09A : 98B1;  -- 		OUT    PXL_D
+           09B : 6864;  -- 		ADDI   100
+           09C : 98B1;  -- 		OUT    PXL_D
+           09D : 6864;  -- 		ADDI   100
+           09E : 98B1;  -- 		OUT    PXL_D
+           09F : 6864;  -- 		ADDI   100
+           0A0 : 98B1;  -- 		OUT    PXL_D
+           0A1 : 6864;  -- 		ADDI   100
+           0A2 : 98B1;  -- 		OUT    PXL_D
+           0A3 : 6864;  -- 		ADDI   100
+           0A4 : 98B1;  -- 		OUT    PXL_D
+           0A5 : 6864;  -- 		ADDI   100
+           0A6 : 98B1;  -- 		OUT    PXL_D
+           0A7 : 6864;  -- 		ADDI   100
+           0A8 : 98B1;  -- 		OUT    PXL_D
+           0A9 : 6864;  -- 		ADDI   100
+           0AA : 98B1;  -- 		OUT    PXL_D
+           0AB : 28AC;  -- 		JUMP   End
+           0AC : 28AC;  -- 		JUMP   End
   END;

@@ -65,6 +65,22 @@ Start:
 		OUT    PXL_D
 		ADDI   100
 		OUT    PXL_D
+		ADDI   100
+		OUT    PXL_D
+		ADDI   100
+		OUT    PXL_D
+		ADDI   100
+		OUT    PXL_D
+		ADDI   100
+		OUT    PXL_D
+		ADDI   100
+		OUT    PXL_D
+		ADDI   100
+		OUT    PXL_D
+		ADDI   100
+		OUT    PXL_D
+		ADDI   100
+		OUT    PXL_D
 		JUMP   End
 		
 Demo1:	
@@ -117,6 +133,22 @@ Demo4:
 		OUT    PXL_A
 		
 		LOADI  10
+		OUT    PXL_D
+		ADDI   100
+		OUT    PXL_D
+		ADDI   100
+		OUT    PXL_D
+		ADDI   100
+		OUT    PXL_D
+		ADDI   100
+		OUT    PXL_D
+		ADDI   100
+		OUT    PXL_D
+		ADDI   100
+		OUT    PXL_D
+		ADDI   100
+		OUT    PXL_D
+		ADDI   100
 		OUT    PXL_D
 		ADDI   100
 		OUT    PXL_D

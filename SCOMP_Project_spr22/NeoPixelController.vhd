@@ -329,7 +329,7 @@ process(clk_10M, resetn, cs_addr)
 				end if;
 				
 				
-			
+				
 			when setAll  =>
 				-- if after last pixel
 				if(ram_write_addr = 256) then 
@@ -375,7 +375,7 @@ process(clk_10M, resetn, cs_addr)
 					
 				-- If upper 8 bits of a 24 bit color are written
 				elsif (io_write = '1') and (bit_24_R = '1') then
-					TempColorHolder <= ((TempColorHolder and "000000001111111111111111") or ((data_in(15 downto 8) & "00000000" & data_in(7 downto 0))));
+					TempColorHolder <= ((TempColorHolder and "000000001111111100000000") or ((data_in(15 downto 8) & "00000000" & data_in(7 downto 0))));
 					ram_we <= '0';
 					ram_write_addr <= ram_write_addr - ram_write_addr;
 					wstate <= idle;
@@ -392,8 +392,10 @@ process(clk_10M, resetn, cs_addr)
 				-- if the peripheral isn't interacted with and this isn't the last pixel
 				else
 					-- goto next pixel and set data.
-					ram_write_addr <= ram_write_addr + 1;
+					ram_write_addr   <= ram_write_addr + 1;
 					ram_write_buffer <= data_set_all;
+					
+					
 					
 				end if;
 				

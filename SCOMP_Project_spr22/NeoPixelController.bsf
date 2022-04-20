@@ -62,15 +62,15 @@ https://fpgasoftware.intel.com/eula.
 	(port
 		(pt 0 112)
 		(input)
-		(text "bit_24_GB" (rect 0 0 43 12)(font "Arial" ))
-		(text "bit_24_GB" (rect 21 107 64 119)(font "Arial" ))
+		(text "bit_24_GR" (rect 0 0 46 12)(font "Arial" ))
+		(text "bit_24_GR" (rect 21 107 67 119)(font "Arial" ))
 		(line (pt 0 112)(pt 16 112)(line_width 1))
 	)
 	(port
 		(pt 0 128)
 		(input)
-		(text "bit_24_R" (rect 0 0 38 12)(font "Arial" ))
-		(text "bit_24_R" (rect 21 123 59 135)(font "Arial" ))
+		(text "bit_24_B" (rect 0 0 36 12)(font "Arial" ))
+		(text "bit_24_B" (rect 21 123 57 135)(font "Arial" ))
 		(line (pt 0 128)(pt 16 128)(line_width 1))
 	)
 	(port

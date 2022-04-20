@@ -38,171 +38,22 @@ Start:
 Demo1:	
 		LOADI  10
 		OUT    PXL_ALL
-		NOP		
-		NOP		
-		NOP		
-		NOP		
-		NOP
-		NOP
-		NOP
-		NOP		
-		NOP		
-		NOP		
-		NOP		
-		NOP
-		NOP
-		NOP
-		NOP		
-		NOP		
-		NOP		
-		NOP		
-		NOP
-		NOP
-		NOP
-		NOP		
-		NOP		
-		NOP		
-		NOP		
-		NOP
-		NOP
-		NOP
-		NOP		
-		NOP		
-		NOP		
-		NOP		
-		NOP
-		NOP
-		NOP
-		NOP
-		NOP
-		NOP
-		NOP		
-		NOP		
-		NOP		
-		NOP		
-		NOP
-		NOP
-		NOP
-		NOP		
-		NOP		
-		NOP		
-		NOP		
-		NOP
-		NOP
-		NOP
-		NOP		
-		NOP		
-		NOP		
-		NOP		
-		NOP
-		NOP
-		NOP
-		NOP
-		NOP
-		NOP
-		NOP		
-		NOP		
-		NOP		
-		NOP		
-		NOP
-		NOP
-		NOP
-		NOP		
-		NOP		
-		NOP		
-		NOP		
-		NOP
-		NOP
-		NOP
-		NOP		
-		NOP		
-		NOP		
-		NOP		
-		NOP
-		NOP
-		NOP
-		NOP
-		NOP
-		NOP
-		NOP		
-		NOP		
-		NOP		
-		NOP		
-		NOP
-		NOP
-		NOP
-		NOP		
-		NOP		
-		NOP		
-		NOP		
-		NOP
-		NOP
-		NOP
-		NOP		
-		NOP		
-		NOP		
-		NOP		
-		NOP
-		NOP
-		NOP
-		NOP
-		NOP
-		NOP
-		NOP		
-		NOP		
-		NOP		
-		NOP		
-		NOP
-		NOP
-		NOP
-		NOP		
-		NOP		
-		NOP		
-		NOP		
-		NOP
-		NOP
-		NOP
-		NOP		
-		NOP		
-		NOP		
-		NOP		
-		NOP
-		NOP
-		NOP
-		NOP
-		NOP
-		NOP
-		NOP		
-		NOP		
-		NOP		
-		NOP		
-		NOP
-		NOP
-		NOP
-		NOP		
-		NOP		
-		NOP		
-		NOP		
-		NOP
-		NOP
-		NOP
-		NOP		
-		NOP		
-		NOP		
-		NOP		
-		NOP
-		NOP
-		NOP
-		NOP
+		
+		loadi 128
+Wait:  
+		Addi -1
+		jpos Wait
+		
+		
 
 		LOADI  &H006F
-		OUT    PXL_24_G
+		OUT    PXL_24_B
 		LOADI  &HFF00
-		OUT    PXL_24_RB
+		OUT    PXL_24_GR
 		LOADI  &H006F
-		OUT    PXL_24_G
+		OUT    PXL_24_B
 		LOADI  &HFF00
-		OUT    PXL_24_RB
+		OUT    PXL_24_GR
 		JUMP   End
 		
 Demo2:	
@@ -248,9 +99,9 @@ Demo3:
 Demo4:
 
 		LOADI  &H006F
-	OUT    PXL_24_G
-	LOADI  &HFF00
-	OUT    PXL_ALL_24
+		OUT    PXL_24_B
+		LOADI  &HFF00
+		OUT    PXL_ALL_24
 	JUMP End
 		
 End:
@@ -268,6 +119,6 @@ PXL_D:     EQU &H0B1
 
 PXL_ALL:   EQU &H0B2
 INC_REV:   EQU &H0B3
-PXL_24_RB:  EQU &H0B4
-PXL_24_G:   EQU &H0B5
+PXL_24_GR:  EQU &H0B4
+PXL_24_B:   EQU &H0B5
 PXL_ALL_24: EQU &H0B6

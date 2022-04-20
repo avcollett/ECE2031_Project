@@ -13,11 +13,11 @@ CONTENT
            000 : 9000;  -- 		IN 	   Switches
            001 : 401C;  -- 		JZero  Demo1
            002 : 6FFF;  -- 		ADDI   -1
-           003 : 40C3;  -- 		JZero  Demo2
+           003 : 402A;  -- 		JZero  Demo2
            004 : 6FFF;  -- 		ADDI   -1
-           005 : 40CD;  -- 		JZero  Demo3
+           005 : 4034;  -- 		JZero  Demo3
            006 : 6FFF;  -- 		ADDI   -1
-           007 : 40E0;  -- 		JZero  Demo4
+           007 : 4047;  -- 		JZero  Demo4
            008 : 98B3;  -- 		OUT	   INC_REV
            009 : B807;  -- 		LOADI  7
            00A : 98B0;  -- 		OUT    PXL_A
@@ -37,207 +37,54 @@ CONTENT
            018 : 98B1;  -- 		OUT    PXL_D
            019 : 6864;  -- 		ADDI   100
            01A : 98B1;  -- 		OUT    PXL_D
-           01B : 28E5;  -- 		JUMP   End
+           01B : 284C;  -- 		JUMP   End
            01C : B80A;  -- 		LOADI  10
            01D : 98B2;  -- 		OUT    PXL_ALL
-           01E : 0000;  -- 		NOP		
-           01F : 0000;  -- 		NOP		
-           020 : 0000;  -- 		NOP		
-           021 : 0000;  -- 		NOP		
-           022 : 0000;  -- 		NOP
-           023 : 0000;  -- 		NOP
-           024 : 0000;  -- 		NOP
-           025 : 0000;  -- 		NOP		
-           026 : 0000;  -- 		NOP		
-           027 : 0000;  -- 		NOP		
-           028 : 0000;  -- 		NOP		
-           029 : 0000;  -- 		NOP
-           02A : 0000;  -- 		NOP
-           02B : 0000;  -- 		NOP
-           02C : 0000;  -- 		NOP		
-           02D : 0000;  -- 		NOP		
-           02E : 0000;  -- 		NOP		
-           02F : 0000;  -- 		NOP		
-           030 : 0000;  -- 		NOP
-           031 : 0000;  -- 		NOP
-           032 : 0000;  -- 		NOP
-           033 : 0000;  -- 		NOP		
-           034 : 0000;  -- 		NOP		
-           035 : 0000;  -- 		NOP		
-           036 : 0000;  -- 		NOP		
-           037 : 0000;  -- 		NOP
-           038 : 0000;  -- 		NOP
-           039 : 0000;  -- 		NOP
-           03A : 0000;  -- 		NOP		
-           03B : 0000;  -- 		NOP		
-           03C : 0000;  -- 		NOP		
-           03D : 0000;  -- 		NOP		
-           03E : 0000;  -- 		NOP
-           03F : 0000;  -- 		NOP
-           040 : 0000;  -- 		NOP
-           041 : 0000;  -- 		NOP
-           042 : 0000;  -- 		NOP
-           043 : 0000;  -- 		NOP
-           044 : 0000;  -- 		NOP		
-           045 : 0000;  -- 		NOP		
-           046 : 0000;  -- 		NOP		
-           047 : 0000;  -- 		NOP		
-           048 : 0000;  -- 		NOP
-           049 : 0000;  -- 		NOP
-           04A : 0000;  -- 		NOP
-           04B : 0000;  -- 		NOP		
-           04C : 0000;  -- 		NOP		
-           04D : 0000;  -- 		NOP		
-           04E : 0000;  -- 		NOP		
-           04F : 0000;  -- 		NOP
-           050 : 0000;  -- 		NOP
-           051 : 0000;  -- 		NOP
-           052 : 0000;  -- 		NOP		
-           053 : 0000;  -- 		NOP		
-           054 : 0000;  -- 		NOP		
-           055 : 0000;  -- 		NOP		
-           056 : 0000;  -- 		NOP
-           057 : 0000;  -- 		NOP
-           058 : 0000;  -- 		NOP
-           059 : 0000;  -- 		NOP
-           05A : 0000;  -- 		NOP
-           05B : 0000;  -- 		NOP
-           05C : 0000;  -- 		NOP		
-           05D : 0000;  -- 		NOP		
-           05E : 0000;  -- 		NOP		
-           05F : 0000;  -- 		NOP		
-           060 : 0000;  -- 		NOP
-           061 : 0000;  -- 		NOP
-           062 : 0000;  -- 		NOP
-           063 : 0000;  -- 		NOP		
-           064 : 0000;  -- 		NOP		
-           065 : 0000;  -- 		NOP		
-           066 : 0000;  -- 		NOP		
-           067 : 0000;  -- 		NOP
-           068 : 0000;  -- 		NOP
-           069 : 0000;  -- 		NOP
-           06A : 0000;  -- 		NOP		
-           06B : 0000;  -- 		NOP		
-           06C : 0000;  -- 		NOP		
-           06D : 0000;  -- 		NOP		
-           06E : 0000;  -- 		NOP
-           06F : 0000;  -- 		NOP
-           070 : 0000;  -- 		NOP
-           071 : 0000;  -- 		NOP
-           072 : 0000;  -- 		NOP
-           073 : 0000;  -- 		NOP
-           074 : 0000;  -- 		NOP		
-           075 : 0000;  -- 		NOP		
-           076 : 0000;  -- 		NOP		
-           077 : 0000;  -- 		NOP		
-           078 : 0000;  -- 		NOP
-           079 : 0000;  -- 		NOP
-           07A : 0000;  -- 		NOP
-           07B : 0000;  -- 		NOP		
-           07C : 0000;  -- 		NOP		
-           07D : 0000;  -- 		NOP		
-           07E : 0000;  -- 		NOP		
-           07F : 0000;  -- 		NOP
-           080 : 0000;  -- 		NOP
-           081 : 0000;  -- 		NOP
-           082 : 0000;  -- 		NOP		
-           083 : 0000;  -- 		NOP		
-           084 : 0000;  -- 		NOP		
-           085 : 0000;  -- 		NOP		
-           086 : 0000;  -- 		NOP
-           087 : 0000;  -- 		NOP
-           088 : 0000;  -- 		NOP
-           089 : 0000;  -- 		NOP
-           08A : 0000;  -- 		NOP
-           08B : 0000;  -- 		NOP
-           08C : 0000;  -- 		NOP		
-           08D : 0000;  -- 		NOP		
-           08E : 0000;  -- 		NOP		
-           08F : 0000;  -- 		NOP		
-           090 : 0000;  -- 		NOP
-           091 : 0000;  -- 		NOP
-           092 : 0000;  -- 		NOP
-           093 : 0000;  -- 		NOP		
-           094 : 0000;  -- 		NOP		
-           095 : 0000;  -- 		NOP		
-           096 : 0000;  -- 		NOP		
-           097 : 0000;  -- 		NOP
-           098 : 0000;  -- 		NOP
-           099 : 0000;  -- 		NOP
-           09A : 0000;  -- 		NOP		
-           09B : 0000;  -- 		NOP		
-           09C : 0000;  -- 		NOP		
-           09D : 0000;  -- 		NOP		
-           09E : 0000;  -- 		NOP
-           09F : 0000;  -- 		NOP
-           0A0 : 0000;  -- 		NOP
-           0A1 : 0000;  -- 		NOP
-           0A2 : 0000;  -- 		NOP
-           0A3 : 0000;  -- 		NOP
-           0A4 : 0000;  -- 		NOP		
-           0A5 : 0000;  -- 		NOP		
-           0A6 : 0000;  -- 		NOP		
-           0A7 : 0000;  -- 		NOP		
-           0A8 : 0000;  -- 		NOP
-           0A9 : 0000;  -- 		NOP
-           0AA : 0000;  -- 		NOP
-           0AB : 0000;  -- 		NOP		
-           0AC : 0000;  -- 		NOP		
-           0AD : 0000;  -- 		NOP		
-           0AE : 0000;  -- 		NOP		
-           0AF : 0000;  -- 		NOP
-           0B0 : 0000;  -- 		NOP
-           0B1 : 0000;  -- 		NOP
-           0B2 : 0000;  -- 		NOP		
-           0B3 : 0000;  -- 		NOP		
-           0B4 : 0000;  -- 		NOP		
-           0B5 : 0000;  -- 		NOP		
-           0B6 : 0000;  -- 		NOP
-           0B7 : 0000;  -- 		NOP
-           0B8 : 0000;  -- 		NOP
-           0B9 : 0000;  -- 		NOP
-           0BA : B86F;  -- 		LOADI  &H006F
-           0BB : 98B5;  -- 		OUT    PXL_24_G
-           0BC : BF00;  -- 		LOADI  &HFF00
-           0BD : 98B4;  -- 		OUT    PXL_24_RB
-           0BE : B86F;  -- 		LOADI  &H006F
-           0BF : 98B5;  -- 		OUT    PXL_24_G
-           0C0 : BF00;  -- 		LOADI  &HFF00
-           0C1 : 98B4;  -- 		OUT    PXL_24_RB
-           0C2 : 28E5;  -- 		JUMP   End
-           0C3 : B801;  -- 		LOADI  1
-           0C4 : 98B0;  -- 		OUT    PXL_A
-           0C5 : BB88;  -- 		LOADI  5000
-           0C6 : 98B1;  -- 		OUT    PXL_D
-           0C7 : B801;  -- 		LOADI  1
-           0C8 : 98B0;  -- 		OUT    PXL_A
-           0C9 : 90B1;  -- 		IN	   PXL_D
-           0CA : 9804;  -- 		OUT    Hex0
-           0CB : 98B1;  -- 		OUT    PXL_D
-           0CC : 28E5;  -- 		JUMP   End
-           0CD : B800;  -- 		LOADI  0
-           0CE : 98B0;  -- 		OUT    PXL_A
-           0CF : B80A;  -- 		LOADI  10
-           0D0 : 98B1;  -- 		OUT    PXL_D
-           0D1 : 6864;  -- 		ADDI   100
-           0D2 : 98B1;  -- 		OUT    PXL_D
-           0D3 : 6864;  -- 		ADDI   100
-           0D4 : 98B1;  -- 		OUT    PXL_D
-           0D5 : 6864;  -- 		ADDI   100
-           0D6 : 98B1;  -- 		OUT    PXL_D
-           0D7 : 6864;  -- 		ADDI   100
-           0D8 : 98B1;  -- 		OUT    PXL_D
-           0D9 : 6864;  -- 		ADDI   100
-           0DA : 98B1;  -- 		OUT    PXL_D
-           0DB : 6864;  -- 		ADDI   100
-           0DC : 98B1;  -- 		OUT    PXL_D
-           0DD : 6864;  -- 		ADDI   100
-           0DE : 98B1;  -- 		OUT    PXL_D
-           0DF : 28E5;  -- 		JUMP   End
-           0E0 : B86F;  -- 		LOADI  &H006F
-           0E1 : 98B5;  -- 	OUT    PXL_24_G
-           0E2 : BF00;  -- 	LOADI  &HFF00
-           0E3 : 98B6;  -- 	OUT    PXL_ALL_24
-           0E4 : 28E5;  -- 	JUMP End
-           0E5 : 28E5;  -- 		JUMP   End
+           01E : B880;  -- 		loadi 128
+           01F : 6FFF;  -- 		Addi -1
+           020 : 381F;  -- 		jpos Wait
+           021 : B86F;  -- 		LOADI  &H006F
+           022 : 98B5;  -- 		OUT    PXL_24_B
+           023 : BF00;  -- 		LOADI  &HFF00
+           024 : 98B4;  -- 		OUT    PXL_24_GR
+           025 : B86F;  -- 		LOADI  &H006F
+           026 : 98B5;  -- 		OUT    PXL_24_B
+           027 : BF00;  -- 		LOADI  &HFF00
+           028 : 98B4;  -- 		OUT    PXL_24_GR
+           029 : 284C;  -- 		JUMP   End
+           02A : B801;  -- 		LOADI  1
+           02B : 98B0;  -- 		OUT    PXL_A
+           02C : BB88;  -- 		LOADI  5000
+           02D : 98B1;  -- 		OUT    PXL_D
+           02E : B801;  -- 		LOADI  1
+           02F : 98B0;  -- 		OUT    PXL_A
+           030 : 90B1;  -- 		IN	   PXL_D
+           031 : 9804;  -- 		OUT    Hex0
+           032 : 98B1;  -- 		OUT    PXL_D
+           033 : 284C;  -- 		JUMP   End
+           034 : B800;  -- 		LOADI  0
+           035 : 98B0;  -- 		OUT    PXL_A
+           036 : B80A;  -- 		LOADI  10
+           037 : 98B1;  -- 		OUT    PXL_D
+           038 : 6864;  -- 		ADDI   100
+           039 : 98B1;  -- 		OUT    PXL_D
+           03A : 6864;  -- 		ADDI   100
+           03B : 98B1;  -- 		OUT    PXL_D
+           03C : 6864;  -- 		ADDI   100
+           03D : 98B1;  -- 		OUT    PXL_D
+           03E : 6864;  -- 		ADDI   100
+           03F : 98B1;  -- 		OUT    PXL_D
+           040 : 6864;  -- 		ADDI   100
+           041 : 98B1;  -- 		OUT    PXL_D
+           042 : 6864;  -- 		ADDI   100
+           043 : 98B1;  -- 		OUT    PXL_D
+           044 : 6864;  -- 		ADDI   100
+           045 : 98B1;  -- 		OUT    PXL_D
+           046 : 284C;  -- 		JUMP   End
+           047 : B86F;  -- 		LOADI  &H006F
+           048 : 98B5;  -- 		OUT    PXL_24_B
+           049 : BF00;  -- 		LOADI  &HFF00
+           04A : 98B6;  -- 		OUT    PXL_ALL_24
+           04B : 284C;  -- 	JUMP End
+           04C : 284C;  -- 		JUMP   End
   END;
